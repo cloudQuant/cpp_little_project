@@ -91,7 +91,143 @@ static void treeFactory(GenericTree<int>& tree) {
   //                           EXERCISE 1
   //    TODO: Your work here! You should edit this function body!
   //      *****************************************************
+  auto rootNodePtr = tree.getRootPtr();
+  rootNodePtr->data = 4;
+  auto node8 = rootNodePtr->addChild(8);
+  auto node15 = rootNodePtr->addChild(15);
+  auto node16 = node8->addChild(16);
+  auto node23 = node8->addChild(23);
+  auto node42 = node16->addChild(42);
 
+  // Base case: When the tree is empty
+  if (nullptr == rootNodePtr) {
+    return;
+  }
+  std::stack<const GenericTree<int>::TreeNode*> nodesToExplore;
+  nodesToExplore.push(rootNodePtr);
+  std::stack<int> depthStack;
+  depthStack.push(0);
+
+  std::stack< std::vector<bool> > curMarginStack;
+  curMarginStack.push( std::vector<bool>() );
+  std::stack< std::vector<bool> > trailingMarginStack;
+  trailingMarginStack.push( std::vector<bool>() );
+
+  while (!nodesToExplore.empty()) {
+
+    // Get a copy of the top pointer on the explore stack.
+    const GenericTree<int>::TreeNode* curNode = nodesToExplore.top();
+
+    // Now that we've retrieved the top pointer, we can pop it from the explore stack.
+    nodesToExplore.pop();
+
+    // Pop the current depth for the node being explored.
+    int curDepth = depthStack.top();
+    depthStack.pop();
+
+    // Pop the current and trailing margin graphic flags for this node.
+    std::vector<bool> curMargin = curMarginStack.top();
+    curMarginStack.pop();
+    std::vector<bool> trailingMargin = trailingMarginStack.top();
+    trailingMarginStack.pop();
+
+    // Print the tree as vertical character art.
+    // Display two rows for each node: The first row adds vertical space
+    // for clarity (while continuing the trailing stems), and the second
+    // row displays the actual data item on a horizontal stem.
+     constexpr int LAST_ROW = 2;
+
+     for (int row = 1; row<=LAST_ROW; row++) {
+        // Iterate forward through the margin display flags to fill in the margin.
+        for (auto stemIt = curMargin.begin(); stemIt != curMargin.end(); stemIt++) {
+
+          bool showStem = *stemIt;
+          std::string stemSymbol = "|";
+          if (!showStem) {
+            stemSymbol = " ";
+          }
+
+          bool isLastCol = false;
+          if (stemIt + 1 == curMargin.end()) {
+            isLastCol = true;
+          }
+
+          if (isLastCol) {
+            if (LAST_ROW==row) {
+              // The stem before the data item should always be "|_ " in effect:
+              std::cout << stemSymbol << "_ ";
+            }
+            else if (showStem) {
+              // Display a stem and a newline
+              std::cout << stemSymbol << std::endl;
+            }
+            else {
+              // Don't bother displaying trailing spaces before the newline
+              std::cout << std::endl;
+            }
+          }
+          else {
+            // Display a stem (or a blank) and some padding spaces
+            std::cout << stemSymbol << "  ";
+          }
+
+          // Bottom of loop for margin stems
+        }
+
+        // Bottom of loop for multi-row display
+      }
+
+      // At the end of the second row, output the data. The root node data
+      // is displayed alone on the first line correctly.)
+      if (curNode) {
+        std::cout << curNode->data << std::endl;
+      }
+
+    // If this node is non-null and has any children...
+    if (curNode && curNode->childrenPtrs.size() > 0) {
+
+      // Now, we iterate over childrenPtrs in reverse order. The iterator "it"
+      // will begin at the "reverse beginning", and we'll iterate it as long as
+      // it's not the "reverse ending". When we do it++, we do iterate in the
+      // reverse direction correctly.
+      for (auto it = curNode->childrenPtrs.rbegin(); it != curNode->childrenPtrs.rend(); it++) {
+
+        // The iterator points to one child pointer. So here, the iterator is
+        // like a pointer-to-pointer. By dereferencing the iterator, we get a
+        // child pointer value. We can save a temporary copy of that child pointer
+        // to a local variable.
+        const GenericTree<int>::TreeNode* childPtr = *it;
+
+        // Now, push the child pointer onto the stack of children to explore.
+        nodesToExplore.push(childPtr);
+
+        // Record the depth that corresponds to the child node.
+        depthStack.push(curDepth+1);
+
+        // Prepare a working copy of the margin for the node we're pushing.
+        auto nextMargin = trailingMargin;
+        // All nodes get an extra stem glyph next to their printout.
+        nextMargin.push_back(true);
+        curMarginStack.push(nextMargin);
+
+        // But for the trailing margin, we need to leave the rightmost child
+        // with a blank trailing in the margin, because it's displayed lowest.
+        auto nextTrailingMargin = trailingMargin;
+        if (curNode->childrenPtrs.rbegin() == it) {
+          // This is the rightmost child. Leave a blank trailing.
+          nextTrailingMargin.push_back(false);
+        }
+        else {
+          // Other children leave a vertical stem symbol trailing in the margin.
+          nextTrailingMargin.push_back(true);
+        }
+        trailingMarginStack.push(nextTrailingMargin);
+
+      }
+    }
+
+  }
+  //std::cout<<"============================================================="<<std::endl;
   // Edit the function body only. You should leave the function header alone.
   // Build the contents of tree so that it matches the diagram above
   // when you print it out. The main() function runs that test for you.
@@ -318,7 +454,18 @@ std::vector<T> traverseLevels(GenericTree<T>& tree) {
   //                           EXERCISE 2
   //    TODO: Your work here! You should edit this function body!
   //      *****************************************************
-
+  std::queue<TreeNode*> nodesToExplore;
+  nodesToExplore.push(rootNodePtr);
+  while (!nodesToExplore.empty()) {
+    TreeNode* curNode = nodesToExplore.front();
+    nodesToExplore.pop();
+    if (curNode) {
+      results.push_back(curNode->data);
+      for (auto childPtr : curNode->childrenPtrs) {
+        nodesToExplore.push(childPtr);
+        }
+    }
+  }
   // Perform a level-order traversal and record the data of the nodes in
   // the results vector. They should be placed in the vector in level order.
   // Remember that you can add a copy of an item to the back of a std::vector
