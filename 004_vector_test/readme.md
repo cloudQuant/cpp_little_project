@@ -1,0 +1,1 @@
+when add value to a vector, if use &value, the value cannot be reassign a new value ,otherwise, the new value will be the same.
