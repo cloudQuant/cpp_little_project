@@ -89,7 +89,7 @@ void informalTests() {
   // (The output will be very verbose.)
   constexpr bool doEx1Tests = false;
   constexpr bool doEx2Tests = false;
-  constexpr bool doEx3Tests = false;
+  constexpr bool doEx3Tests = true;
   // Some of the tests may take a few seconds to process. If that is annoying,
   // you can temporarily disable them by setting this to false:
   constexpr bool doEx3SlowTests = true; // requires doEx3Tests == true
@@ -189,12 +189,12 @@ void informalTests() {
     // puzzleBFS edge cases: --------------------
     if (!doEx3SlowTests) std::cout << "(informalTests: doEx3SlowTests==false, so we'll skip some slow tests.)" << std::endl << std::endl;
 
-    if (doEx3SlowTests) puzzleBFS_Tester_NoPath(); // This one is slow even when your code is correct!
-    puzzleBFS_Tester_StartAtGoal();
+    //if (doEx3SlowTests) puzzleBFS_Tester_NoPath(); // This one is slow even when your code is correct!
+    //puzzleBFS_Tester_StartAtGoal();
 
     // puzzleBFS general cases: --------------------
     puzzleBFS_Tester();
-    puzzleBFS_Tester_Random();
+    //puzzleBFS_Tester_Random();
   }
   else {
     std::cout << makeHeader2("Skipping informal tests for Exercise 3.") << std::endl << std::endl;

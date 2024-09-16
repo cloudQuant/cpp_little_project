@@ -98,6 +98,8 @@ static inline std::ostream& operator<<(std::ostream& os, const IntPair& point) {
   return os;
 }
 
+
+
 // Here we do the same hashing trick again for a pair of IntPair.
 // In a few cases this could be useful for making a set of edges.
 // However, with adjacency lists, we don't usually need to explicitly

@@ -51,8 +51,15 @@ int GridGraph::countEdges() const {
 
   // =======================================================================
   // TODO: Your code here!
+  for (auto p1: adjacencyMap) {
+    for (auto p2: adjacencyMap) {
+      if (hasEdge(p1.first, p2.first)) {
+          numEdges++;
+        }
+    }
+  }
   // =======================================================================
-
+  numEdges/=2;
   return numEdges;
 }
 
@@ -91,6 +98,14 @@ void GridGraph::removePoint(const IntPair& p1) {
 
   // =======================================================================
   // TODO: Your code here!
+  if (originalNeighbors.size() == 0){return;}
+  for (auto p2: originalNeighbors) {
+    if (p2==p1) { continue; }
+    GridGraph::NeighborSet newNeighbors = adjacencyMap.at(p2);
+    if (newNeighbors.size() == 0) {continue;}
+    if (newNeighbors.count(p1)) { newNeighbors.erase(p1); }
+    adjacencyMap[p2] =  newNeighbors;
+  }
   // =======================================================================
 
   // Finally, for the one point we are removing, erase the point key itself
@@ -100,6 +115,7 @@ void GridGraph::removePoint(const IntPair& p1) {
 
   // =======================================================================
   // TODO: Your code here!
+  if (adjacencyMap.count(p1)) {adjacencyMap.erase(p1);}
   // =======================================================================
 }
 
@@ -171,7 +187,7 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
   // We'll hard-code a maximum distance for any shortest path through the graph
   // that we will consider before giving up. This isn't strictly necessary for
   // BFS to be correct; when a path can be found from start to goal, we'll find
-  // the shortest such path and we won't alwaysneed to visit all of the vertices
+  // the shortest such path and we won't always need to visit all of the vertices
   // before that happens anyway. But suppose the goal is unreachable from start;
   // then if the graph has a very large number of vertices, an unrestricted BFS
   // algorithm would have to explore all the reachable vertices before giving up
@@ -295,7 +311,7 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
     // TODO: Your code here!
     // We'll need to loop over the neighbors that are the points adjacent to curPoint.
     // Get a copy of the set of neighbors we're going to loop over.
-    GridGraph::NeighborSet neighbors; // Change this...
+    GridGraph::NeighborSet neighbors = graph.adjacencyMap.at(curPoint); // Change this...
     // =====================================================================
 
     for (auto neighbor : neighbors) {
@@ -303,7 +319,7 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
       // ==================================================================
       // TODO: Your code here!
       // Check whether the neighbor has already been visited.
-      bool neighborWasAlreadyVisited = false; // Change this...
+      bool neighborWasAlreadyVisited = visitedSet.count(neighbor); // Change this...
       // ==================================================================
 
       // If this adjacent vertex has NOT been visited before, we will visit it now.
@@ -313,18 +329,17 @@ std::list<IntPair> graphBFS(const IntPair& start, const IntPair& goal, const Gri
 
         // ================================================================
         // TODO: Your code here!
-
         // Record that the curPoint is the predecessor of the neighbor point,
         // since curPoint has just led to the discovery of this neighbor for
         // the first time.
         // ...
-
+        pred[neighbor] = curPoint;
         // Add neighbor to the visited set.
         // ...
-
+        visitedSet.insert(neighbor);
         // Push neighbor into the exploration queue.
         // ...
-
+        exploreQ.push(neighbor);
         // ================================================================
 
         // Check if we've taken too many steps so far.
@@ -510,9 +525,9 @@ std::list<PuzzleState> puzzleBFS(const PuzzleState& start, const PuzzleState& go
     // TODO: Your code here!
     // We'll need to loop over the neighbors that are the points adjacent to curState.
     // We need a collection of neighbors we're going to loop over.
-    
-    auto neighbors = {start}; // Change this! This line is totally wrong.
 
+    auto neighbors = curState.getAdjacentStates(); // Change this! This line is totally wrong.
+    // std::cout << dist[curState] << " neighbor size = " << neighbors.size() << std::endl;
     // Hint: Look at PuzzleState.h
     // =====================================================================
 
@@ -521,7 +536,7 @@ std::list<PuzzleState> puzzleBFS(const PuzzleState& start, const PuzzleState& go
       // ==================================================================
       // TODO: Your code here!
       // Check whether the neighbor has already been visited.
-      bool neighborWasAlreadyVisited = false; // Change this...
+      bool neighborWasAlreadyVisited = visitedSet.count(neighbor); // Change this...
       // ==================================================================
 
       if (!neighborWasAlreadyVisited) {
@@ -533,29 +548,36 @@ std::list<PuzzleState> puzzleBFS(const PuzzleState& start, const PuzzleState& go
         // since curState has just led to the discovery of this neighbor for
         // the first time.
         // ...
-
+        pred[neighbor] = curState;
         // Add neighbor to the visited set.
         // ...
-
+        visitedSet.insert(neighbor);
         // Push neighbor into the exploration queue.
         // ...
-
+        exploreQ.push(neighbor);
         // ================================================================
 
         dist[neighbor] = dist[curState]+1;
+        //std::cout << dist[neighbor] << " neighbor = " << neighbor << std::endl;
         if (dist[neighbor] > maxDist) {
           tooManySteps = true;
+          //std::cout << "too many steps ==> break" << std::endl;
           break;
         }
 
         if (neighbor == goal) {
+          //std::cout << "find goal ==> break" << std::endl;
           foundGoal = true;
           break;
         }
 
       } // end of handling the just-discovered neighbor
+//      else{
+//        std::cout << dist[neighbor] <<" neighbor has been already been dequeued." << std::endl ;
+//      }
 
     } // end of for loop
+    //std::cout << "exploreQ size: " << exploreQ.size() << " find goal = " << foundGoal << " steps = " << tooManySteps << std::endl;
   } // end of while loop
 
   if (tooManySteps) {
