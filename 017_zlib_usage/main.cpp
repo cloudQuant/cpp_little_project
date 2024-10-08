@@ -12,7 +12,7 @@ void compress_data(){
     if (ret != Z_OK) {
         printf("Compression failed: %d\n", ret);
     }
-
+    printf("before compressed size: %lu\n", input_len);
     printf("Compressed size: %lu\n", output_len);
  }
 
