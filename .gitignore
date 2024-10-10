@@ -1,0 +1,74 @@
+# 编译生成的文件
+*.o
+*.obj
+*.so
+*.a
+*.lib
+*.dll
+*.exe
+*.out
+*.app
+*.i
+*.ii
+*.s
+*.su
+
+# 编译器生成的文件
+*.d
+*.lo
+*.la
+*.al
+*.libs
+*.log
+*.stackdump
+*.cproject
+*.project
+*.swp
+*.dep
+
+# 编译配置文件
+CMakeFiles/
+CMakeCache.txt
+Makefile
+CMakeLists.txt.user
+build/
+cmake-build-debug/
+cmake_install.cmake
+compile_commands.json
+
+# IDE 项目文件
+.idea/
+.vscode/
+*.code-workspace
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+.DS_Store
+
+# 临时文件
+*~
+*.swp
+*.tmp
+*.DS_Store
+Thumbs.db
+
+# 覆盖率报告文件
+*.gcno
+*.gcda
+*.gcov
+
+# 日志和调试
+*.log
+*.trace
+
+# 单元测试输出
+test_results/
+
+# 包管理工具生成的文件
+.vcpkg/
+conanbuildinfo.txt
+conan.lock
+conanbuildinfo.cmake
+conanbuildinfo.mak
+conan_packages/
