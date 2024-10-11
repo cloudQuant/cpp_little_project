@@ -21,10 +21,17 @@ using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 using mongocxx::cursor;
 
 using namespace std;
 using namespace crow;
+using namespace crow::mustache;
+
+string getView(const string &filename, crow::mustache::context &x) {
+    std::string filePath = filename + ".html";
+    return crow::mustache::load(filePath).render(x).body_;
+}
 
 void sendFile(response &res, string filename, string contentType){
   ifstream in("public/" + filename, ifstream::in);
@@ -59,6 +66,7 @@ void sendStyle(response &res, string filename){
 
 int main(int argc, char* argv[]) {
     crow::SimpleApp app;
+//    crow::mustache::set_base(".");
     // MongoDB Instance Initialization
     mongocxx::instance instance{};
     mongocxx::uri uri("mongodb://localhost:27017");
@@ -151,17 +159,29 @@ int main(int argc, char* argv[]) {
       sendHtml(res, "about");
     });
 
+    CROW_ROUTE(app, "/contract/<string>")
+      ([&collection](string email){
+         auto doc = collection.find_one(make_document(kvp("email", email)));
+         crow::json::wvalue dto;
+         dto["contract"] = json::load(bsoncxx::to_json(doc.value().view()));
+         return getView("contract", dto);
+      });
+
   CROW_ROUTE(app, "/contracts")
     ([&collection](){
         mongocxx::options::find opts;
         opts.skip(9);  // 跳过前 9 条记录
         opts.limit(10);  // 限制返回 10 条记录
         auto docs = collection.find({}, opts);
-        std::ostringstream os;
-        for(auto &&doc : docs){
-            os << bsoncxx::to_json(doc) << "\n";
-        }
-        return crow::response{200, os.str()};
+        crow::json::wvalue dto;
+          vector<crow::json::rvalue> contracts;
+          contracts.reserve(10);
+          for(auto doc : docs){
+            contracts.push_back(json::load(bsoncxx::to_json(doc)));
+          }
+          dto["contracts"] = contracts;
+          std::cout << contracts[0] << std::endl;
+          return getView("contracts", dto);
     });
 
   CROW_ROUTE(app, "/")

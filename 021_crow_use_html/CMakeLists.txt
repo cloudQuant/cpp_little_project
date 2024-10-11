@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.7)
-set(CMAKE_TOOLCHAIN_FILE "/Users/yunjinqi/vcpkg/scripts/buildsystems/vcpkg.cmake")
+# set(CMAKE_TOOLCHAIN_FILE "/Users/yunjinqi/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_TOOLCHAIN_FILE "/home/yun/vcpkg/scripts/buildsystems/vcpkg.cmake")
 project(hello_crow)
 
 set(CMAKE_CXX_STANDARD 23)
