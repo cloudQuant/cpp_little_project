@@ -77,18 +77,17 @@ void sendImage(response &res, const std::string &filename){
   sendFile(res, "images/" + filename, "image/jpeg");
 }
 
-void sendScript(response &res, const std::string &filename){
+void sendScript( [[maybe_unused]] response &res, const std::string &filename){
   sendFile(res, "scripts/" + filename, "text/javascript");
 }
 
-void sendStyle(response &res, const std::string &filename){
+void sendStyle([[maybe_unused]] response &res, const std::string &filename){
   sendFile(res, "styles/" + filename, "text/css");
 }
 
-int main(int argc, char* argv[]) {
+int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[]) {
     std::mutex mtx;
-    std::unordered_set<crow::websocket::connection *> users;
-
+    [[maybe_unused]] std::unordered_set<crow::websocket::connection *> users;
     crow::SimpleApp app;
 //    crow::mustache::set_base(".");
     // MongoDB Instance Initialization
@@ -269,31 +268,30 @@ int main(int argc, char* argv[]) {
         opts.limit(10);  // 限制返回 10 条记录
         auto docs = collection.find({}, opts);
         crow::json::wvalue dto;
-          vector<crow::json::rvalue> contracts;
-          contracts.reserve(10);
-          for(auto doc : docs){
+        vector<crow::json::rvalue> contracts;
+        contracts.reserve(10);
+        for(auto doc : docs){
             contracts.push_back(json::load(bsoncxx::to_json(doc)));
-          }
-          dto["contracts"] = contracts;
-          std::cout << contracts[0] << std::endl;
-          return getView(res, "contracts", dto);
+        }
+        dto["contracts"] = contracts;
+        std::cout << contracts[0] << std::endl;
+        return getView(res, "contracts", dto);
     });
 
     CROW_ROUTE(app, "/api/contracts")
     ([&collection](const request &req){
       auto skipVal = req.url_params.get("skip");
       auto limitVal = req.url_params.get("limit");
-      int skip = skipVal? stoi(skipVal): 0;
-      int limit = limitVal? stoi(limitVal): 10;
+      int skip = skipVal ? stoi(skipVal): 0;
+      int limit = limitVal ? stoi(limitVal): 10;
 
       mongocxx::options::find opts;
       opts.skip(skip);
       opts.limit(limit);
-      auto docs = collection.find({}, opts);
+      // auto docs = collection.find({}, opts);
       vector<crow::json::rvalue> contracts;
       contracts.reserve(10);
-
-      for(auto doc : docs){
+      for(auto doc : collection.find({}, opts)){
         contracts.push_back(json::load(bsoncxx::to_json(doc)));
       }
       crow::json::wvalue dto;
