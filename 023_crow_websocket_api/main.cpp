@@ -137,18 +137,18 @@ int main(int argc, char* argv[]) {
         std::vector<bsoncxx::document::value> documents;
 
         for (const auto& item : jsonData.GetArray()) {
-            bsoncxx::builder::stream::document doc;
+            bsoncxx::builder::basic::document doc;
             for (auto& m : item.GetObject()) {
                 std::string key = m.name.GetString();
 
                 if (m.value.IsString()) {
-                    doc << key << bsoncxx::types::b_utf8{m.value.GetString()};  // Handle string values
+                    doc.append(bsoncxx::builder::basic::kvp(key, m.value.GetString()));  // Handle string values
                 } else if (m.value.IsInt()) {
-                    doc << key << bsoncxx::types::b_int32{m.value.GetInt()};    // Handle integer values
+                    doc.append(bsoncxx::builder::basic::kvp(key, m.value.GetInt()));     // Handle integer values
                 } else if (m.value.IsBool()) {
-                    doc << key << bsoncxx::types::b_bool{m.value.GetBool()};    // Handle boolean values
+                    doc.append(bsoncxx::builder::basic::kvp(key, m.value.GetBool()));    // Handle boolean values
                 } else if (m.value.IsDouble()) {
-                    doc << key << bsoncxx::types::b_double{m.value.GetDouble()};  // Handle double values
+                    doc.append(bsoncxx::builder::basic::kvp(key, m.value.GetDouble()));  // Handle double values
                 }
                 // Add more checks here for other types like arrays, objects, etc., if needed.
             }
