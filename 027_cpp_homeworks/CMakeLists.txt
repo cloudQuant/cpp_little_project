@@ -1,7 +1,7 @@
 # 设置 CMake 的最低版本
 cmake_minimum_required(VERSION 3.10)
-# set(CMAKE_TOOLCHAIN_FILE "/Users/yunjinqi/vcpkg/scripts/buildsystems/vcpkg.cmake")
-set(CMAKE_TOOLCHAIN_FILE "/home/yun/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_TOOLCHAIN_FILE "/Users/yunjinqi/vcpkg/scripts/buildsystems/vcpkg.cmake")
+# set(CMAKE_TOOLCHAIN_FILE "/home/yun/vcpkg/scripts/buildsystems/vcpkg.cmake")
 # 项目名称
 project(MyHomeworkProject)
 
@@ -12,7 +12,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 
 # 添加头文件路径
-include_directories(src/include)
+include_directories(include)
 
 ## 添加源文件
 #set(SOURCES
