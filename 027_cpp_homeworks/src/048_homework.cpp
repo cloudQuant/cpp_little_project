@@ -31,6 +31,7 @@ D+d:2
 #include <map>
 #include <string>
 #include <limits>
+#include <cctype>
 
 int main(){
     std::map<char, int> content;
@@ -45,10 +46,11 @@ int main(){
             //std::cout << " end for loop" << std::endl;
             break;
         }
-        if (ch>='A' && ch <= 'Z'){
-            ch+=32;
+        if (std::isalpha(ch)){
+            ch = std::tolower(ch);
         }
-        if (ch >= 'a' && ch <='z'){
+        if (std::isalpha(ch)) {
+            ch = std::tolower(ch);
             if (!content.count(ch)){
                 ordered_char.push_back(ch);
             }
@@ -64,7 +66,7 @@ int main(){
     for (int i=0; i<ordered_char.size(); i++) {
         char key = ordered_char[i];
         int value = content[key];
-        std::cout << key << " " << value << std::endl;
+        //std::cout << key << " " << value << std::endl;
         if (value > maxValue) {
             // 更新第二大值为原最大值
             secondMaxValue = maxValue;
@@ -78,10 +80,60 @@ int main(){
             secondMaxKey = key;
         }
     }
-    std::cout << secondMaxKey << secondMaxValue << std::endl;
+    //std::cout << secondMaxKey << secondMaxValue << std::endl;
     // 打印输出
-    ch = static_cast<char>(secondMaxKey - 32);
+    ch = static_cast<char>(secondMaxKey-32);
     std::cout << ch << "+" << secondMaxKey << ":" << secondMaxValue << std::endl;
     return 0;
 }
+
+//#include <iostream>
+//#include <unordered_map>
+//#include <string>
+//#include <cctype>
+//#include <limits>
+//
+//int main() {
+//    std::unordered_map<char, int> content;
+//    std::string input;
+//    std::getline(std::cin, input);
+//
+//    // 统计字母出现次数（忽略大小写）
+//    for (char ch : input) {
+//        if (std::isalpha(ch)) {
+//            ch = std::tolower(ch);
+//            content[ch]++;
+//        }
+//    }
+//
+//    // 找到出现最多和第2多的字母
+//    char maxKey = '\0', secondMaxKey = '\0';
+//    int maxValue = std::numeric_limits<int>::min();
+//    int secondMaxValue = std::numeric_limits<int>::min();
+//
+//    for (const auto& [key, value] : content) {
+//        if (value > maxValue) {
+//            // 更新第二大值为原最大值
+//            secondMaxValue = maxValue;
+//            secondMaxKey = maxKey;
+//            // 更新最大值
+//            maxValue = value;
+//            maxKey = key;
+//        } else if (value > secondMaxValue && value < maxValue) {
+//            // 更新第二大值
+//            secondMaxValue = value;
+//            secondMaxKey = key;
+//        }
+//    }
+//
+//    // 输出结果
+//    if (secondMaxKey != '\0') {
+//        std::cout << std::toupper(secondMaxKey) << "+" << secondMaxKey << ":" << secondMaxValue << std::endl;
+//    } else {
+//        std::cout << "No second most frequent letter found." << std::endl;
+//    }
+//
+//    return 0;
+//}
+
 

@@ -23,24 +23,37 @@ m 和 k 的值，空格间隔
  */
 
 #include <iostream>
-int main(){
-    int m=0, k=0;
+int main() {
+    int m = 0, k = 0;
     std::cin >> m >> k;
-    if (m % 19 != 0){
+
+    // 检查输入的有效性
+    if (m <= 1 || k <= 1 || k >= 5) {
         std::cout << "NO" << std::endl;
         return 0;
     }
+
+    // 检查 m 是否能被 19 整除
+    if (m % 19 != 0) {
+        std::cout << "NO" << std::endl;
+        return 0;
+    }
+
+    // 统计数字 '3' 的个数
     int count = 0;
-    while (m / 10 > 0){
-        if (m % 10 == k){
+    while (m > 0) {
+        if (m % 10 == 3) {
             count++;
         }
-        m = m / 10;
+        m /= 10;
     }
-    if (count == 3){
+
+    // 判断是否恰好包含 k 个 '3'
+    if (count == k) {
         std::cout << "YES" << std::endl;
-    }else{
+    } else {
         std::cout << "NO" << std::endl;
-    };
+    }
+
     return 0;
 }

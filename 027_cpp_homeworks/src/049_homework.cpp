@@ -25,35 +25,36 @@ error
 
 #include <iostream>
 #include <string>
+#include <sstream>
 
-int main(){
+int main() {
     std::string content;
     std::getline(std::cin, content);
-    //std::cout << content << std::endl;
-    int a = std::stoi(content.substr(0,1));
-    int b = std::stoi(content.substr(2,1));
-    int c = std::stoi(content.substr(4,1));
-    if (a - b == c){
-        std::cout << "-" << std::endl;
-        return 0;
-    }
-    if (a + b == c){
-        std::cout << "+" << std::endl;
-        return 0;
-    }
-    if (a * b == c){
-        std::cout << "*" << std::endl;
-        return 0;
-    }
-    if (a / b == c){
-        std::cout << "/" << std::endl;
-        return 0;
-    }
-    if (a%b==c){
-        std::cout << "%" << std::endl;
-        return 0;
-    }
-    std::cout << "error" << std::endl;
-    return 0;
 
+    // 使用 stringstream 解析输入
+    int a, b, c;
+    char comma1, comma2;
+
+    std::istringstream ss(content);
+    if (!(ss >> a >> comma1 >> b >> comma2 >> c) || comma1 != ',' || comma2 != ',') {
+        std::cout << "error" << std::endl;
+        return 0;
+    }
+
+    // 输出符合条件的运算符
+    if (a + b == c) {
+        std::cout << "+" << std::endl;
+    } else if (a - b == c) {
+        std::cout << "-" << std::endl;
+    } else if (a * b == c) {
+        std::cout << "*" << std::endl;
+    } else if (b != 0 && a / b == c) {
+        std::cout << "/" << std::endl;
+    } else if (b != 0 && a % b == c) {
+        std::cout << "%" << std::endl;
+    } else {
+        std::cout << "error" << std::endl;
+    }
+
+    return 0;
 }
