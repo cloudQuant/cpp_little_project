@@ -25,6 +25,7 @@ include_directories(include)
 # 添加测试文件
 set(TEST_SOURCES
         tests/test_my_homework.cpp
+        tests/test_pointer.cpp
 )
 
 # 添加测试目标
