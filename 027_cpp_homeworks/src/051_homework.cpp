@@ -1,13 +1,15 @@
 /*
  * 描述
-当你站在一个迷宫里的时候，往往会被错综复杂的道路弄得失去方向感，如果你能得到迷宫地图，事情就会变得非常简单。
+当你站在一个迷宫里的时候，往往会被错综复杂的道路弄得失去方向感，
+ 如果你能得到迷宫地图，事情就会变得非常简单。
 
 假设你已经得到了一个n*m的迷宫的图纸，请你找出从起点到出口的最短路。
 
 输入
 第一行是两个整数n和m(1 <= n,m <= 100)，表示迷宫的行数和列数。
 
-接下来n行，每行一个长为m的字符串，表示整个迷宫的布局。字符'.'表示空地，'#'表示墙，'S'表示起点,'T'表示出口。
+接下来n行，每行一个长为m的字符串，表示整个迷宫的布局。字符'.'表示空地，
+ '#'表示墙，'S'表示起点,'T'表示出口。
 
 输出
 输出从起点到出口最少需要走的步数。(你不能起出迷宫外)
@@ -30,7 +32,7 @@ int main() {
     cin >> n >> m;
 
     vector<string> maze(n);
-    vector<vector<bool>> visited(n, vector<bool>(m, false));
+    vector< vector<bool> > visited(n, vector<bool>(m, false));
     queue<Node> q;
 
     int startX, startY, endX, endY;
@@ -51,7 +53,11 @@ int main() {
     }
 
     // 初始化 BFS
-    q.push({startX, startY, 0});
+    Node n0;
+    n0.x = startX;
+    n0.y = startY;
+    n0.steps = 0;
+    q.push(n0);
     visited[startX][startY] = true;
 
     // BFS 搜索最短路径
@@ -74,7 +80,11 @@ int main() {
             if (nx >= 0 && nx < n && ny >= 0 && ny < m &&
                 !visited[nx][ny] && maze[nx][ny] != '#') {
                 visited[nx][ny] = true;
-                q.push({nx, ny, current.steps + 1});
+                Node n1;
+                n1.x = nx;
+                n1.y = ny;
+                n1.steps = current.steps + 1;
+                q.push(n1);
             }
         }
     }
