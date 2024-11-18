@@ -105,10 +105,6 @@ class Solider{
           if (this->stop_status){return;}
           std::string solider_type = this->names[this->now_index%5];
           int now_life_num = this->name_map[solider_type];
-//          std::cout << "now_index = " << now_index
-//                    << " now_num = " << now_num
-//                    << " solider_type = " << solider_type
-//                    << std::endl;
           if (this->life_num >= now_life_num){
               this->solider_numbers[this->now_index%5]++;
               this->life_num -= now_life_num;
@@ -174,14 +170,18 @@ int main(){
     blue_names.push_back("iceman");
     blue_names.push_back("wolf");
 
-    int case_num, life_num, a, b,c,d,e;
-    std::cin >> case_num >> life_num >> a >> b >> c >> d >> e;
-    std::cout << "Case:" << case_num << std::endl;
-    Solider red(life_num, a, b, c, d, e, "red", red_names);
-    Solider blue(life_num, a, b, c, d, e, "blue", blue_names);
-    while (!red.get_stop_status() || !blue.get_stop_status()){
-      red.generage_solider();
-      blue.generage_solider();
+    int case_num;
+    std::cin >> case_num;
+    for (int i=0 ;i<case_num; ++i){
+      int  life_num, a, b,c,d,e;
+      std::cin >> life_num >> a >> b >> c >> d >> e;
+      std::cout << "Case:" << i+1 << std::endl;
+      Solider red(life_num, a, b, c, d, e, "red", red_names);
+      Solider blue(life_num, a, b, c, d, e, "blue", blue_names);
+      while (!red.get_stop_status() || !blue.get_stop_status()){
+        red.generage_solider();
+        blue.generage_solider();
+      }
     }
 
     return 0;

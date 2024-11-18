@@ -5,6 +5,7 @@ public:
     int val;
 // 在此处补充你的代码
     A(){this->val=0;}
+    A(int n){this->val=n;}
     int & GetObj(){
         int &v = this->val;
         return v;
