@@ -25,6 +25,7 @@
 #include <sstream>
 #include <vector>
 #include <cmath>
+#include <cstdlib>
 
 class StudentInfo{
 public:
@@ -43,12 +44,12 @@ public:
         }
         // 提取各个字段
         this->name = tokens[0];
-        this->age = std::stoi(tokens[1]);
+        this->age = std::atoi(tokens[1].c_str());
         this->id = tokens[2];
-        this->first_year_grade = std::stoi(tokens[3]);
-        this->second_year_grade = std::stoi(tokens[4]);
-        this->three_year_grade = std::stoi(tokens[5]);
-        this->four_year_grade = std::stoi(tokens[6]);
+        this->first_year_grade = std::atoi(tokens[3].c_str());
+        this->second_year_grade = std::atoi(tokens[4].c_str());
+        this->three_year_grade = std::atoi(tokens[5].c_str());
+        this->four_year_grade = std::atoi(tokens[6].c_str());
     }
     StudentInfo(std::string name, int age, std::string id, double f, double s, double t, double four){
         this->name = name;
