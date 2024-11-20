@@ -1,6 +1,6 @@
 /*
 描述
-魔兽世界的西面是红魔军的司令部，东面是蓝魔军的司令部。两个司令部之间是依次排列的若干城市。
+魔兽世界的西面是红魔军的司令部，东面是蓝魔军的司令部。两个司令部之间是依次排列的 若干 城市。
 
 红司令部，City 1，City 2，……，City n，蓝司令部
 
@@ -85,11 +85,11 @@ It's loyalty is 24
 同一时间发生的事件，先输出红司令部的，再输出蓝司令部的。
 
 输入
-第一行是一个整数,代表测试数据组数。
+第一行 是一个整数,代表测试数据组数。
 
 每组测试数据共两行。
 
-第一行，一个整数M。其含义为： 每个司令部一开始都有M个生命元( 1 <= M <= 10000)
+第一行，一个整数M。其含义为： 每个司令部 一开始 都有M个生命元( 1 <= M <= 10000)
 
 第二行：五个整数，依次是 dragon 、ninja、iceman、lion、wolf 的初始生命值。它们都大于0小于等于10000
 
@@ -108,186 +108,218 @@ It's loyalty is 24
 #include <iomanip>
 
 class Weapon{
-   private:
+private:
      int num;
-     std::vector<std::string> names {"sword", "bomb","arrow"};
-    public:
-      Weapon(){};
-      Weapon(int i){this->num = i;}
-      std::string get_weapon_name(){
-        return this->names[this->num];
-        }
-       void set_num(int i){
+     std::vector<std::string> names;
+public:
+      Weapon(){
+          this->names.push_back("sword");
+          this->names.push_back("bomb");
+          this->names.push_back("arrow");
+      };
+      Weapon(int i){
           this->num = i;
-        }
+          this->names.push_back("sword");
+          this->names.push_back("bomb");
+          this->names.push_back("arrow");}
+      std::string get_weapon_name(){return this->names[this->num];}
+      void set_num(int i){this->num = i;}
   };
 
-class Solider{
+class Soldier{
 private:
-int num;
-int life_num;
+    int num;
+    int life_num;
 public:
-  Solider(){};
-  Solider(int num, int life_num){
-      this->num = num;
-      this->life_num = num;
-    }
-  void set_life_num(int life_num_){
-    this->life_num = life_num_;
-    }
- void set_num(int num_){
-   this->num = num_;
-   }
- int get_life_num(){
-   return this->life_num;
-   }
-  int get_num(){
-    return this->num;
-  }
-  virtual std::string get_name();
-
+    Soldier(){};
+    Soldier(int num, int life_num){this->num = num;this->life_num = life_num;}
+    void set_life_num(int life_num_){this->life_num = life_num_;}
+    void set_num(int num_){this->num = num_;}
+    int get_life_num(){return this->life_num;}
+    int get_num(){return this->num;}
+    virtual std::string get_name() = 0;
+    virtual void print_status() = 0;
+    // 添加虚析构函数
+    virtual ~Soldier() {}
 };
 
-class DragonSolider: public Solider{
-    private:
+class DragonSoldier: public Soldier{
+private:
       Weapon w;
       double morale;
-    public:
-      DragonSolider(){};
-      DragonSolider(int num, int life_num, double morale) : Solider(num, life_num){
+public:
+      DragonSoldier(){};
+      DragonSoldier(int num, int life_num, double morale) : Soldier(num, life_num){
              this->w.set_num(num%3);
              this->morale = morale;
-        }
-      double get_morale(){
-        return this->morale;
-       }
-       std::string get_weapon_name(){
-         return this->w.get_weapon_name();
-       }
-       std::string get_name(){
-         return "Dragon";
-         }
-  };
-
-class NinjaSolider: public Solider{
-  private:
-    Weapon w1, w2;
-    public:
-  NinjaSolider(){};
-  NinjaSolider(int num, int life_num) : Solider(num, life_num){
-    this->w1.set_num(num%3);
-    this->w2.set_num((num+1)%3);
-  }
-  std::string get_weapon_name(){
-    return this->w1.get_weapon_name()+ " and " + this->w2.get_weapon_name();
-  }
-  std::string get_name(){
-    return "Ninja";
-  }
-
+      }
+      double get_morale(){return this->morale;}
+      std::string get_weapon_name(){return this->w.get_weapon_name();}
+      std::string get_name(){return "dragon";}
+      void print_status(){
+          std::cout << "It has a "
+                    << this->get_weapon_name()
+                    <<",and it's morale is "
+                    << std::fixed << std::setprecision(2) << this->morale
+                    << std::endl;
+      }
 };
 
-class IcemanSolider: public Solider{
+class NinjaSoldier: public Soldier{
 private:
-  Weapon w1;
+    Weapon w1, w2;
 public:
-  IcemanSolider(){};
-  IcemanSolider(int num, int life_num) : Solider(num, life_num){
-    this->w1.set_num(num%3);
-  }
-  std::string get_weapon_name(){
-    return this->w1.get_weapon_name();
-  }
-  std::string get_name(){
-    return "Iceman";
-  }
-}
-
-class LionSolider: public Solider{
-  private:
-  int loyalty;
-  public:
-  LionSolider(){};
-  LionSolider(int num, int life_num, int loyalty) : Solider(num, life_num), loyalty(loyalty){}
-  int get_loyalty(){
-    return this->loyalty;
-  }
-  std::string get_name(){
-    return "Lion";
-  }
+    NinjaSoldier(){};
+    NinjaSoldier(int num, int life_num) : Soldier(num, life_num){
+        this->w1.set_num(num%3);
+        this->w2.set_num((num+1)%3);
+    }
+    std::string get_weapon_name(){
+        return "a " + this->w1.get_weapon_name()+ " and a " + this->w2.get_weapon_name();
+    }
+    std::string get_name(){return "ninja";}
+    void print_status(){
+        std::cout << "It has " << this->get_weapon_name() << std::endl;
+    }
 
 };
 
-class WolfSolider: public Solider{
+class IcemanSoldier: public Soldier{
+private:
+    Weapon w1;
 public:
-  WolfSolider(){};
-  WolfSolider(int num, int life_num) : Solider(num, life_num){}
-  std::string get_name(){
-    return "Wolf";
-  }
+    IcemanSoldier(){};
+    IcemanSoldier(int num, int life_num) : Soldier(num, life_num){this->w1.set_num(num%3);}
+    std::string get_weapon_name(){return this->w1.get_weapon_name();}
+    std::string get_name(){return "iceman";}
+    void print_status(){std::cout << "It has a " << this->get_weapon_name() << std::endl;}
+};
+
+class LionSoldier: public Soldier{
+private:
+    int loyalty;
+public:
+    LionSoldier(){};
+    LionSoldier(int num, int life_num, int loyalty) : Soldier(num, life_num), loyalty(loyalty){}
+    int get_loyalty(){return this->loyalty;}
+    std::string get_name(){return "lion";}
+    void print_status(){std::cout <<"It's loyalty is " << this->get_loyalty() << std::endl;}
+};
+
+class WolfSoldier: public Soldier{
+public:
+  WolfSoldier(){};
+  WolfSoldier(int num, int life_num) : Soldier(num, life_num){}
+  std::string get_name(){return "wolf";}
+  void print_status(){}
 };
 
 
 class DemonArmy{
 private:
     int life_num; // 生命值
-    int now_num; //当前时间
+    int now_time; //当前时间
     int now_index; //当前制作士兵的顺序
     bool stop_status; // 当前是否停止制作
     std::string name; // 军营的名字
-    std::vector<std::string> names; // 制作士兵的顺序
-    std::vector< std::vector<Solider> > soliders; // 制作士兵的结果保存
-    std::map<std::string, int> name_map; // 制作士兵需要耗费的生命值
+    std::vector<std::string> soldier_names; // 制作士兵的顺序
+    std::vector< std::vector<Soldier*> > soldier_content; // 制作士兵的结果保存
+    std::map<std::string, int> soldier_name_life_map; // 制作士兵需要耗费的生命值
  public:
-     bool get_stop_status(){
-        return stop_status;
-      }
-     DemonArmy(int life_num, std::map<std::string, int>&name_map,
-             std::string name, std::vector<std::string> &names){
+     bool get_stop_status(){return stop_status;}
+     DemonArmy(std::string name, int life_num, std::map<std::string, int>&soldier_name_life_map,
+              std::vector<std::string> &soldier_names){
        this->life_num = life_num;
-       this->now_num = 0;
+       this->now_time = 0;
        this->now_index = 0;
-       this->names = names;
-       this->name_map = name_map ;
+       this->name = name;
+       this->soldier_names = soldier_names;
+       this->soldier_name_life_map = soldier_name_life_map ;
        this->stop_status = false;
-
+       this->soldier_content.resize(5);
      }
-     void print_solider_status(Solider & sd){
-       std::cout << std::setw(3) << std::setfill('0') << this->now_num << " "
-                                       << this->name <<" "
-                                       << sd.get_name() <<" "
-                                       << this->now_num+1 << " born with strength "
-                                        << sd.get_life_num() <<"," << this->soliders[this->now_index%5].size() << " "
-                                        << sd.get_name() << " in "
-                                        << this->name <<" headquarter" << std::endl;
+    ~DemonArmy(){
+        for (size_t i = 0; i < this->soldier_content.size(); ++i) {
+            for (size_t j = 0; j < this->soldier_content[i].size(); ++j) {
+                delete this->soldier_content[i][j]; // 释放指针指向的对象
+                this->soldier_content[i][j] = NULL; // 避免悬空指针
+            }
+            this->soldier_content[i].clear(); // 清空当前列表
+        }
+        this->soldier_content.clear(); // 清空所有士兵内容
+
+    }
+     void print_soldier_status(Soldier & sd){
+       std::cout    << std::setw(3)
+                    << std::setfill('0')
+                    << this->now_time << " "
+                    << this->name <<" "
+                    << sd.get_name() <<" "
+                    << this->now_time+1 << " born with strength "
+                    << sd.get_life_num() <<","
+                    << this->soldier_content[this->now_index%5].size() << " "
+                    << sd.get_name() << " in "
+                    << this->name <<" headquarter"
+                    << std::endl;
+       sd.print_status();
        }
-      void print_army_status(){
-           std::cout << std::setw(3) << std::setfill('0') << this->now_num<<" "
+      void print_stop_status(){
+           std::cout << std::setw(3) << std::setfill('0') << this->now_time<<" "
                      << this->name
                      << " headquarter stops making warriors" << std::endl;
         }
-     void generage_solider(){
+    Soldier* create_solider(std::string& soldier_name, int num, int life_num){
+         this->life_num -= life_num;
+         if (soldier_name == "dragon"){
+             double morale = 1.0*this->life_num/life_num;
+             return new DragonSoldier(num,life_num, morale);
+         }else if (soldier_name == "ninja"){
+             NinjaSoldier ns(num,life_num);
+             return new NinjaSoldier(num,life_num);
+         }
+         else if (soldier_name == "iceman"){
+             IcemanSoldier is(num, life_num);
+             return new IcemanSoldier(num, life_num);
+         }
+         else if (soldier_name == "lion"){
+             return new LionSoldier(num, life_num, this->life_num);
+         }else{
+             return new WolfSoldier(num, life_num);
+         }
+     }
+     void generate_next_soldier(){
           if (this->stop_status){return;}
-          std::string solider_type = this->names[this->now_index%5];
-          int now_life_num = this->name_map[solider_type];
-          if (this->life_num >= now_life_num){
-              this->solider_numbers[this->now_index%5]++;
-              this->life_num -= now_life_num;
-              print_status(solider);
-              this->now_num++;
+          std::string now_soldier_name(this->soldier_names[this->now_index%5]);
+          int soldier_life_num = this->soldier_name_life_map[now_soldier_name];
+          // 如果当前军营的生命值大于可以制造士兵的生命值
+          if (this->life_num >= soldier_life_num){
+              // 制造士兵
+              Soldier * now_soldier = this->create_solider(now_soldier_name,this->now_time+1,soldier_life_num);
+              // 保存士兵
+              this->soldier_content[this->now_index%5].push_back(now_soldier);
+              // 打印士兵状态
+              this->print_soldier_status(*now_soldier);
+              // 增加时间，增加指数
+              this->now_time++;
               this->now_index++;
+
             }
-           else{
+          //如果当前军营的生命值不足以制造当前的士兵，查看能否制造其他士兵，否则就停止制造
+          else{
                 bool stop = true;
                 for(int i =0; i<5; i++){
                     this->now_index++;
-                    solider_type = this->names[this->now_index%5];
-                    now_life_num = this->name_map[solider_type];
-                    if (this->life_num >= now_life_num){
-                            this->solider_numbers[this->now_index%5]++;
-                            this->life_num -= now_life_num;
-                            print_status(solider);
-                            this->now_num++;
+                    std::string now_soldier_name(this->soldier_names[this->now_index%5]);
+                    int soldier_life_num = this->soldier_name_life_map[now_soldier_name];
+                    if (this->life_num >= soldier_life_num){
+                            // 制造士兵
+                            Soldier * now_soldier = this->create_solider(now_soldier_name,this->now_time+1,soldier_life_num);
+                            // 保存士兵
+                            this->soldier_content[this->now_index%5].push_back(now_soldier);
+                            // 打印士兵状态
+                            this->print_soldier_status(*now_soldier);
+                            // 增加时间，增加指数
+                            this->now_time++;
                             this->now_index++;
                             stop = false;
                             break;
@@ -295,7 +327,7 @@ private:
                     }
                 this->stop_status = stop;
                 if (this->stop_status){
-                  print_army_status();
+                  print_stop_status();
                 }
             }
 
@@ -327,18 +359,18 @@ int main(){
     for (int i=0 ;i<case_num; ++i){
       int  life_num, a, b,c,d,e;
       std::cin >> life_num >> a >> b >> c >> d >> e;
-      std::map<std::string, int> name_map;
-      name_map["dragon"] = a;
-      name_map["ninja"] = b;
-      name_map["iceman"] = c;
-      name_map["lion"] = d;
-      name_map["wolf"] = e;
+      std::map<std::string, int> soldier_name_life_map;
+      soldier_name_life_map["dragon"] = a;
+      soldier_name_life_map["ninja"] = b;
+      soldier_name_life_map["iceman"] = c;
+      soldier_name_life_map["lion"] = d;
+      soldier_name_life_map["wolf"] = e;
       std::cout << "Case:" << i+1 << std::endl;
-      Solider red(life_num, a, b, c, d, e, "red", red_names);
-      Solider blue(life_num, a, b, c, d, e, "blue", blue_names);
-      while (!red.get_stop_status() || !blue.get_stop_status()){
-        red.generage_solider();
-        blue.generage_solider();
+      DemonArmy red_army("red", life_num, soldier_name_life_map, red_names);
+      DemonArmy blue_army("blue", life_num, soldier_name_life_map, blue_names);
+      while (!red_army.get_stop_status() || !blue_army.get_stop_status()){
+        red_army.generate_next_soldier();
+        blue_army.generate_next_soldier();
       }
     }
 
