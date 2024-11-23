@@ -1,5 +1,5 @@
-//#include <iostream>
-//using namespace std;
+#include <iostream>
+using namespace std;
 // 在此处补充你的代码
 class CType{
   private:
@@ -20,14 +20,14 @@ class CType{
       }
 
 };
-//int main(int argc, char* argv[]) {
-//    CType obj;
-//    int n;
-//    cin>>n;
-//    while ( n ) {
-//        obj.setvalue(n);
-//        cout<<obj++<<" "<<obj<<endl;
-//        cin>>n;
-//    }
-//    return 0;
-//}
+int main(int argc, char* argv[]) {
+    CType obj;
+    int n;
+    cin>>n;
+    while ( n ) {
+        obj.setvalue(n);
+        cout<<obj++<<" "<<obj<<endl;
+        cin>>n;
+    }
+    return 0;
+}
