@@ -49,7 +49,15 @@ int main() {
     std::cmatch what;
     std::string urlStr = "https://www.fstream.binance.com:9943//ws";
     if (std::regex_match(urlStr.c_str(), what, ex)) {
-        std::cout << "Found url: " << what[1] << std::endl;
+        //std::cout << "Found url: " << what[1] << std::endl;
+        std::cout << "what[1].first = " << what[1].first << std::endl;
+        std::cout << "what[1].second = " << what[1].second << std::endl;
+        std::cout << "what[2].first = " << what[2].first << std::endl;
+        std::cout << "what[2].second = " << what[2].second << std::endl;
+        std::cout << "what[3].first = " << what[3].first << std::endl;
+        std::cout << "what[3].second = " << what[3].second << std::endl;
+        std::cout << "what[4].first = " << what[4].first << std::endl;
+        std::cout << "what[4].second = " << what[4].second << std::endl;
         std::string protocol = std::string(what[1].first, what[1].second);
         std::string host = std::string(what[2].first, what[2].second);
         std::string port = std::string(what[3].first, what[3].second);
